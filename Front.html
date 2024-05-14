@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Selection</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url("c3uhsgo1vx541.jpg") no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2rem;
+        }
+
+        h1 img {
+            width: 900px;
+            max-width: 1000px;
+            height: 340px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .grid-item {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-item img {
+            width: 80%;
+            /* Adjust the width as needed */
+            max-width: 500px;
+            height: auto;
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+
+
+        .grid-item img:hover {
+            transform: scale(1.1);
+        }
+
+        .game-name a {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .game-name a:hover {
+            color: #ff6600;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background-color: #f1f1f1;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            border-radius: 10px;
+            animation: modalFadeIn 0.5s;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+        }
+
+        .quirky-text {
+            font-style: italic;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .game-name a {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            .game-name a {
+                font-size: 1rem;
+            }
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            padding: 12px 20px;
+            /* Adjust the padding as needed */
+            width: 400px;
+            /* Adjust the width as needed */
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            font-size: 1.2rem;
+            /* Adjust the font size as needed */
+            outline: none;
+            transition: border-color 0.3s;
+            margin-right: 20px;
+        }
+
+        .search-input:focus {
+            border-color: #ff6600;
+            /* Change to desired focus color */
+        }
+
+        .button-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #ff6600;
+            /* Change to desired hover color */
+        }
+
+        .nav-menu {
+            background-color: #333;
+            /* Dark background color */
+            padding: 10px 0;
+            /* Padding at the top and bottom of the navigation bar */
+            text-align: center;
+            /* Center-align the links */
+            width: 100%;
+            /* Make the navigation bar span the full width of the page */
+            position: fixed;
+            /* Fix the navigation bar at the top of the page */
+            top: 0;
+            /* Position it at the top of the page */
+            z-index: 1000;
+            /* Ensure it's above other content */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            /* Add a shadow for depth */
+            display: flex;
+            /* Use flexbox for better alignment */
+            justify-content: space-around;
+            /* Evenly space the links */
+        }
+
+        .nav-menu a {
+            color: white;
+            /* Text color for the links */
+            text-decoration: none;
+            /* Remove underline from links */
+            font-size: 1.2rem;
+            /* Larger font size for the links */
+            transition: color 0.3s;
+            /* Smooth color transition on hover */
+        }
+
+        .nav-menu a:hover {
+            color: #ff6600;
+            /* Change text color on hover */
+        }
+
+        .filter-btn {
+            padding: 12px 24px;
+            /* Adjust the padding as needed */
+            font-size: 1.2rem;
+            /* Adjust the font size as needed */
+            border: 2px solid #333;
+            /* Add a border */
+            border-radius: 25px;
+            /* Rounded border */
+            background-color: #ff6600;
+            /* Orange background color */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            /* Smooth transitions */
+            margin-right: 10px;
+            /* Add some spacing between the buttons */
+        }
+
+        .filter-btn:hover {
+            background-color: #333;
+            /* Darker background color on hover */
+            color: #ff6600;
+            /* Orange text color on hover */
+            border-color: #ff6600;
+            /* Orange border color on hover */
+        }
+
+        /* Added styles for the highest score headlines */
+        .highest-score-container {
+            position: fixed;
+            left: 20px;
+            /* Adjust the left position as needed */
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            /* Adjust the width as needed */
+            animation: moveHeadlines 5s linear infinite;
+            z-index: 1000;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            /* Add a shadow for depth */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Use a different font family */
+        }
+
+        @keyframes moveHeadlines {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        .highest-score-container p {
+            margin: 10px 0;
+            font-size: 1.2rem;
+            /* Adjust the font size as needed */
+            animation: fadeInOut 2s infinite alternate;
+            text-align: center;
+        }
+
+        @keyframes fadeInOut {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Decorative underline for the highest score headlines */
+        .highest-score-container::before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #ff6600;
+            margin-bottom: 10px;
+        }
+
+        .login-container {
+            position: fixed;
+            left: 83%;
+            /* Move the container to the middle */
+            transform: translateX(-50%) translateY(-50%);
+            /* Center the container horizontally and vertically */
+            top: 60%;
+            /* Position the container vertically */
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .login-container label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .login-container input {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            width: 200px;
+        }
+
+        .login-container button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+        }
+
+        .login-container button:hover {
+            background-color: #ff6600;
+        }
+
+        #greeting {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            font-size: 1.2rem;
+            color: #333;
+            text-align: center;
+            max-width: 80%;
+            z-index: 1000;
+            display: none;
+            /* Hide it by default */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="nav-menu">
+        <a href="#">Home</a>
+        <a href="#">Games</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+    </div>
+    <h1><img src="Black and Blue Retro Pixel Game Night Game Presentation.gif"></h1>
+    <div class="search-container">
+        <input type="text" class="search-input" id="searchInput" oninput="filterGames()" placeholder="Search...">
+    </div>
+    <div class="filter-container">
+        <button class="filter-btn" onclick="filterGames2('action')">Action</button>
+        <button class="filter-btn" onclick="filterGames2('adventure')">Adventure</button>
+        <button class="filter-btn" onclick="filterGames2('puzzle')">Puzzle</button>
+        <button class="filter-btn" onclick="filterGames2('strategy')">Strategy</button>
+    </div>
+    <div class="grid">
+        <div class="grid-item">
+            <img src="360_F_309225946_UvTtkionVxWKhYzHKrxT0vW2XDjdSJPm.jpg" alt="Whack A Mole"
+                onclick="openGame2('Whack A Mole', 'Get ready to whack!','index.html')">
+            <p class="game-name"><a href="index.html">Whack A Mole</a></p>
+        </div>
+        <div class="grid-item">
+            <img src="desktop-wallpaper-flappy-bird-background.jpg" alt="Flappy Bird"
+                onclick="openGame2('Flappy Bird', 'Dodge those pipes!', 'index2.html')">
+            <p class="game-name"><a href="index2.html">Flappy Bird</a></p>
+        </div>
+        <div class="grid-item">
+            <img src="video-game-candy-crush-soda-saga-wallpaper-preview.jpg" alt="Candy Crush"
+                onclick="openGame2('Candy Crush', 'Match those candies!', 'index3.html')">
+            <p class="game-name"><a href="index3.html">Candy Crush</a></p>
+        </div>
+        <div class="grid-item">
+            <img src="blackjack-cards-wallpaper-preview.jpg" alt="Black Jack"
+                onclick="openGame2('Black Jack', 'Try your luck!', 'index4.html')">
+            <p class="game-name"><a href="index4.html">Black Jack</a></p>
+        </div>
+    </div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="gameTitle"></h2>
+            <p id="quirkyText" class="quirky-text">Enjoy the game!</p>
+        </div>
+    </div>
+    <div class="highest-score-container">
+        <p>Highest Scores:</p>
+        <p>Whack A Mole - 150</p>
+        <p>Flappy Bird - 80</p>
+        <p>Candy Crush - 200</p>
+        <p>Black Jack - 21</p>
+    </div>
+    <div class="login-container">
+        <label for="username">Username:</label>
+        <input type="text" id="username" placeholder="Enter your username">
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Enter your password">
+        <button onclick="login()">Login</button>
+    </div>
+    <div id="greeting"></div>
+</body>
+<script>
+    function openGame(url) {
+        window.open(url, '_blank');
+    }
+    // Object to store high scores for each game
+    var highScores = JSON.parse(localStorage.getItem('highScores')) || {
+            'Whack A Mole': 0,
+            'Flappy Bird': 0,
+            'Candy Crush': 0,
+            'Black Jack': 0
+        };
+
+
+        function updateHighScoreContainer() {
+            document.getElementById('whackAMoleScore').innerText = 'Whack A Mole - ' + highScores['Whack A Mole'];
+            document.getElementById('flappyBirdScore').innerText = 'Flappy Bird - ' + highScores['Flappy Bird'];
+            document.getElementById('candyCrushScore').innerText = 'Candy Crush - ' + highScores['Candy Crush'];
+            document.getElementById('blackJackScore').innerText = 'Black Jack - ' + highScores['Black Jack'];
+        }
+
+        function openGame2(title, text, gameUrl) {
+            document.getElementById('gameTitle').innerText = title;
+            document.getElementById('quirkyText').innerText = text;
+            document.getElementById('myModal').style.display = 'block';
+            setTimeout(function () {
+                closeModal();
+                window.open(gameUrl, '_blank');
+                var score = 100; // Assume the player scored 100 for demonstration purposes
+                if (score > highScores[title]) {
+                    highScores[title] = score; // Update the high score for the current game
+                    localStorage.setItem('highScores', JSON.stringify(highScores)); // Store updated high scores
+                    updateHighScoreContainer(); // Update the high score container
+                }
+            }, 5000); // Adjust the delay as needed (5 seconds in this example)
+        }
+    // Initial call to populate the high score container
+    updateHighScoreContainer();
+
+    function closeModal() {
+        document.getElementById('myModal').style.display = 'none';
+    }
+
+    // Close the modal when clicking outside of it
+    window.onclick = function (event) {
+        var modal = document.getElementById('myModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+    function filterGames() {
+        var input, filter, grid, gridItems, gameNames, i, txtValue;
+        input = document.getElementById('searchInput');
+        filter = input.value.toUpperCase();
+        grid = document.querySelector('.grid');
+        gridItems = grid.getElementsByClassName('grid-item');
+        for (i = 0; i < gridItems.length; i++) {
+            gameNames = gridItems[i].getElementsByClassName('game-name')[0];
+            txtValue = gameNames.textContent || gameNames.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                gridItems[i].style.display = '';
+            } else {
+                gridItems[i].style.display = 'none';
+            }
+        }
+    }
+
+    function filterGames2(filterType) {
+        var gameUrl = '';
+        switch (filterType) {
+            case 'action':
+                gameUrl = 'index.html';
+                openGame2('Whack A Mole', 'Get ready to whack!', gameUrl);
+                break;
+            case 'adventure':
+                gameUrl = 'index2.html';
+                openGame2('Flappy Bird', 'Dodge those pipes!', gameUrl);
+                break;
+            case 'puzzle':
+                gameUrl = 'index3.html';
+                openGame2('Candy Crush', 'Match those candies!', gameUrl);
+                break;
+            case 'strategy':
+                gameUrl = 'index4.html';
+                openGame2('Black Jack', 'Try your luck!', gameUrl);
+                break;
+            default:
+                break;
+        }
+    }
+
+    function login() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        if (username.trim() === '' || password.trim() === '') {
+            alert('Please enter both username and password.');
+            return;
+        }
+        // Assume the login is successful for demonstration purposes
+        // In a real application, you would validate the credentials
+        var user = { username: username };
+
+        displayGreeting(user);
+    }
+    function displayGreeting(user) {
+        var greeting = document.getElementById('greeting');
+        greeting.innerText = 'Hi! ' + user.username + '. Hope you enjoy the game.';
+        greeting.style.display = 'block'; // Show the greeting
+        // Hide the greeting after 5 seconds (5000 milliseconds)
+        setTimeout(function () {
+            greeting.style.display = 'none';
+        }, 5000); // Adjust the time as needed (5 seconds in this example)
+    }
+
+
+    function submitForm(event) {
+        event.preventDefault();
+        const name = document.getElementById('name').value;
+        displayName = name;
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('greeting').innerText = 'Hi! ' + displayName + '. Hope you enjoy the game.';
+        document.getElementById('greeting').style.display = 'block';
+    }
+
+</script>
+
+</html>
